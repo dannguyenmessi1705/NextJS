@@ -1,4 +1,6 @@
-import Navigation from "./_components/Navigation";
+export const metadata = {
+  title: "The Wild Oasis"
+};
 
 export default function Page() {
   return (
