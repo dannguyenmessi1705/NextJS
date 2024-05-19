@@ -1,15 +1,21 @@
-import { getCabin } from "@/app/_lib/data-service";
+import { getCabin, getCabins } from "@/app/_lib/data-service";
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 
 // Tạo metadata cho route động
 export async function generateMetadata({ params }) {
-  const cabin = await getCabin(params.cabinId); 
-  const {name } = cabin;
+  const cabin = await getCabin(params.cabinId);
+  const { name } = cabin;
   return {
-    title: `Cabin ${name}`
-  }
-}
+    title: `Cabin ${name}`,
+  };
+} // Hàm tạo ra metadata
+
+export async function generateStaticParams() {
+  const cabins = await getCabins();
+  const ids = cabins.map((cabin) => ({ cabinId: String(cabin.id) }));
+  return ids;
+} // Hàm để tạo ra các static params cho các route động (giúp NextJS tối ưu hiệu suất)
 
 export default async function Page({ params }) {
   const cabinId = params.cabinId;
