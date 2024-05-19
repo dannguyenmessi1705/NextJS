@@ -1,5 +1,7 @@
-function loading() {
-  return <h1>Fetching data....</h1>;
+import Spinner from "@/app/_components/Spinner";
+
+function Loading() {
+  return <Spinner />;
 }
 
-export default loading;
+export default Loading;
