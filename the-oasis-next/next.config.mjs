@@ -10,7 +10,7 @@ const nextConfig = {
       },
     ],
   },
-  output: "export", // Tạo ra các file HTML tĩnh cho mỗi route, với điều kiện tất cả các component đã là Static Site Rendering
+  // output: "export", // Tạo ra các file HTML tĩnh cho mỗi route, với điều kiện tất cả các component đã là Static Site Rendering
 };
 
 export default nextConfig;
