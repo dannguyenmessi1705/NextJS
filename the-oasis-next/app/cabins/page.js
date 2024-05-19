@@ -1,13 +1,11 @@
+import { Suspense } from "react";
+import CabinList from "@/app/_components/CabinList";
+import Loading from "@/app/cabins/loading"
 export const metadata = {
   title: "Cabin",
 };
-import CabinCard from "@/app/_components/CabinCard";
-import { getCabins } from "../_lib/data-service";
 
 export default async function Page() {
-  // CHANGE
-  const cabins = await getCabins();
-
   return (
     <div>
       <h1 className="text-4xl mb-5 text-accent-400 font-medium">
@@ -21,14 +19,10 @@ export default async function Page() {
         away from home. The perfect spot for a peaceful, calm vacation. Welcome
         to paradise.
       </p>
-
-      {cabins.length > 0 && (
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 xl:gap-14">
-          {cabins.map((cabin) => (
-            <CabinCard cabin={cabin} key={cabin.id} />
-          ))}
-        </div>
-      )}
+      {/* Dùng Suspense  giúp chúng ta tạm dừng việc render component con cho đến khi điều kiện nào đó được thỏa mãn. Điều này giúp chúng ta tối ưu hóa việc render component và giảm thiểu việc tải dữ liệu không cần thiết. */ }
+      <Suspense fallback={<Loading />}>
+        <CabinList />
+      </Suspense>
     </div>
   );
 }
