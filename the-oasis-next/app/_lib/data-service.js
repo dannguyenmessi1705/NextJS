@@ -68,7 +68,6 @@ export async function getBooking(id) {
     .select("*")
     .eq("id", id)
     .single();
-
   if (error) {
     console.error(error);
     throw new Error("Booking could not get loaded");
