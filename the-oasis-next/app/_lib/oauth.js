@@ -8,6 +8,12 @@ const authConfig = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
+  callbacks: {
+    authorized({auth, request}) {
+      console.log(auth, request)
+      return !!auth?.user
+    } // Khai báo 1 trình middleware xác thực người dùng
+  } // Khai báo các đối tượng được gọi callback
 }; // Khai báo cấu hình cho NextAuth với Google provider
 
 export const {
