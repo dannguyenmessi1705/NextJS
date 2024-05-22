@@ -29,7 +29,7 @@ const authConfig = {
       }
     }, // Middleware sẽ được chạy sau khi thực hiện hàm signIn
     async session({ session, user }) {
-      const guest = getGuest(session.user.email); // Lấy thông tin user từ database
+      const guest = await getGuest(session.user.email); // Lấy thông tin user từ database
       session.user.id = guest.id; // Gán id của user vào session
       return session; // Trả về session đã được gán id
     }, // Middleware sẽ được chạy sau khi đằng nhập, dùng để gán id của user từ database vào session, do oauth không cung cấp id
