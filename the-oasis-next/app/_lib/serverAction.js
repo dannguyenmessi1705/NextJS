@@ -4,6 +4,7 @@ import { supabase } from "./supabase";
 import { auth } from "./oauth";
 import { revalidatePath } from "next/cache";
 import { getBookings } from "./data-service";
+import { redirect } from "next/navigation";
 
 export async function signInAction() {
   return signIn("google", {
@@ -57,4 +58,38 @@ export async function deleteReservation(bookingId) {
     throw new Error("Booking could not be deleted");
   }
   revalidatePath("/account/reservations"); // Revalidate lại trang reservations (xoá cache cũ để render lại UI)
+}
+
+export async function updateBooking(formData) {
+  const bookingId = Number(formData.get("bookingId"));
+
+  const session = await auth();
+  if (!session?.user) throw new Error("Not Authorized");
+
+  const bookings = await getBookings(session.user.id);
+  const bookingIds = bookings.map((booking) => booking.id);
+
+  if (!bookingIds.includes(bookingId)) throw new Error("Not Authorized");
+
+  const updateData = {
+    numGuests: formData.get("numGuests"),
+    observations: formData.get("observations"),
+  };
+
+  const { error } = await supabase
+    .from("bookings")
+    .update(updateData)
+    .eq("id", bookingId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Booking could not be updated");
+  }
+
+  revalidatePath(`/account/reservations/edit/${bookingId}`); // Revalidate lại trang edit reservation (xoá cache cũ để render lại UI)
+  revalidatePath(`/account/reservations`); // Revalidate lại trang reservations (xoá cache cũ để render lại UI)
+
+  redirect("/account/reservations"); // Redirect về trang reservations
 }
