@@ -1,6 +1,7 @@
 import { eachDayOfInterval } from "date-fns";
 import { supabase } from "./supabase";
 import { notFound } from "next/navigation"; // Gọi đến trang not-found.js
+import { promises as fs } from "fs";
 /////////////
 // GET
 
@@ -143,6 +144,19 @@ export async function getCountries() {
     const countries = await res.json();
     return countries;
   } catch {
+    throw new Error("Could not fetch countries");
+  }
+}
+
+export async function getCountriesFromFile() {
+  try {
+    const file = await fs.readFile(
+      process.cwd() + "/app/_lib/res-countries.json",
+      "utf8"
+    );
+    const data = JSON.parse(file);
+    return data;
+  } catch (error) {
     throw new Error("Could not fetch countries");
   }
 }
