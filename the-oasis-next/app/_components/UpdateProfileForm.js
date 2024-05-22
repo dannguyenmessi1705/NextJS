@@ -1,4 +1,6 @@
+"use client";
 import { updateGuestProfile } from "@/app/_lib/serverAction";
+import { useFormStatus } from "react-dom";
 
 export default function UpdateProfileForm({
   email,
@@ -52,12 +54,21 @@ export default function UpdateProfileForm({
           className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
         />
       </div>
-
       <div className="flex justify-end items-center gap-6">
-        <button className="bg-accent-500 px-8 py-4 text-primary-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300">
-          Update profile
-        </button>
+        <Button />
       </div>
     </form>
   );
 }
+
+function Button() {
+  const { pending } = useFormStatus(); // Lấy ra trạng thái của thẻ form
+  return (
+    <button
+      className="bg-accent-500 px-8 py-4 text-primary-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300"
+      disabled={pending}
+    >
+      {pending ? "Udating" : "Update profile"}
+    </button>
+  );
+} // Tạo component chứa useFormStatus để đưa vào form
