@@ -2,6 +2,7 @@
 import { signIn, signOut } from "./oauth";
 import { supabase } from "./supabase";
 import { auth } from "./oauth";
+import { revalidatePath } from "next/cache";
 
 export async function signInAction() {
   return signIn("google", {
@@ -33,4 +34,5 @@ export async function updateGuestProfile(formData) {
     console.error(error);
     throw new Error("Guest could not be updated");
   }
+  revalidatePath("/acsount/profile"); // Revalidate lại trang profile (xoá cache cũ để render lại UI)
 }
