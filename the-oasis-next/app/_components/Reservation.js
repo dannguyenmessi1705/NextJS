@@ -7,7 +7,7 @@ import LoginMessage from "@/app/_components/LoginMessage"
 async function Reservation({ cabin }) {
   const session = await auth();
   const [settings, bookedDate] = await Promise.all([
-    (getSettings(), getBookedDatesByCabinId(cabin.id))
+    getSettings(), getBookedDatesByCabinId(cabin.id)
   ]);
   return (
     <div className="grid grid-cols-2 min-h-[400px] border border-primary-800">

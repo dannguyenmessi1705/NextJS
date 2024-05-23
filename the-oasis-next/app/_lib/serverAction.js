@@ -93,3 +93,38 @@ export async function updateBooking(formData) {
 
   redirect("/account/reservations"); // Redirect về trang reservations
 }
+
+export async function createReservation(bookingData, formData) {
+  // bookingData chính là giá trị truyền vào ở bên ngoài form qua hàm bind (createReservation.bind(null, bookingData)), trong đó null thể hiện không tham chiếu đến đối tượng nào, bookingData = bookingData
+  // formData chính là giá trị của form khi submit
+  const session = await auth();
+  if (!session?.user) throw new Error("Not Authorized");
+
+  const newBooking = {
+    ...bookingData,
+    guestId: session.user.id,
+    numGuests: Number(formData.get("numGuests")),
+    observations: formData.get("observations"),
+    extrasPrice: 0,
+    totalPrice: bookingData.cabinPrice,
+    isPaid: false,
+    hasBreakfast: false,
+    status: "unconfirmed",
+  };
+
+  const { error } = await supabase
+    .from("bookings")
+    .insert([newBooking])
+    // So that the newly created object gets returned!
+    .select()
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Booking could not be created");
+  }
+
+  revalidatePath(`/cabins/${bookingData.cabinId}`); // Revalidate lại trang reservations (xoá cache cũ để render lại UI)
+
+  redirect("/cabins/thankyou");
+}
