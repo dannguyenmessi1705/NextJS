@@ -1,14 +1,17 @@
 "use client";
-import { deleteReservation } from "@/app/_lib/serverAction";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { useTransition } from "react";
 import SpinnerMini from "./SpinnerMini";
 
-function DeleteReservation({ bookingId }) {
+function DeleteReservation({ bookingId, onDelete }) {
   const [isPending, startTransition] = useTransition();
   const handleDelete = () => {
     if (confirm("Are you delete this items")) {
-      startTransition(() => deleteReservation(bookingId)); // Nếu xác nhận xóa thì gọi hàm deleteReservation và bắt đầu transition (isPending = true)
+      // USE useTransition
+      // startTransition(() => deleteReservation(bookingId)); // Nếu xác nhận xóa thì gọi hàm deleteReservation và bắt đầu transition (isPending = true)
+
+      // USE useOptimistic + useTransition
+      startTransition(() => onDelete(bookingId)); // Nếu xác nhận xóa thì gọi hàm onDelete và bắt đầu transition (isPending = true) Gọi hàm onDelete truyền vào bookingId để xóa booking khỏi danh sách hiển thị ngay lập tức (UI update ngay lập tức, trong khi đó server sẽ chạy trong nền)
     }
   };
   return (
